@@ -1,0 +1,15 @@
+A,B,C,D,E,F,G
+:=,(,),id,*,+,int
+A
+A -> G:=B@assign
+B -> DC
+C -> ~
+C -> +D@add C
+D -> FE
+E -> ~
+E -> *F@mult E
+F -> (B)
+F -> @pid id
+G -> @pid id
+F -> @pid int
+G -> @pid int

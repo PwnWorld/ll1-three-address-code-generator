@@ -1,0 +1,11 @@
+A,B,C,D,E,F
+erfan,amin,+=,*
+A 
+A -> Berfan
+B -> @salam CD
+C -> CDE
+D -> ~
+E -> amin @salam
+E -> +=
+E -> ~
+F -> *
