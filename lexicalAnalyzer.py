@@ -101,4 +101,61 @@ class DFA(object):
         return (False,{'last state':current_state, 'last final state':last_final_state, 'index last final char':index_last_final_char})
 
 
+class InputValidation(DFA):
+    def __init__(self):
+        digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
+        alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'}
+        symbols = []
+        for i in range(256):
+            symbols.append(chr(i))
+            
+        symbols = set(symbols)
+        states = {'A', 'id', 'int', '+', '*', ':=', '(', ')', 'TRAP', ':'}
+        initial_state = 'A'
+        final_states = {'id', 'int', '+', '*', ':=', '(', ')'}
+        
+        transitions = {'A' : {}, 'id' : {}, 'int' : {}, '+' : {}, '*' : {}, '(' : {}, ')' : {}, ':' : {}, ':=' : {}, 'TRAP' : {}}
+        for state in states:
+            for symbol in symbols:
+                if state == 'A':
+                    if symbol == '+':
+                        transitions[state][symbol] = '+'
+                    elif symbol == '*':
+                        transitions[state][symbol] = '*'
+                    elif symbol == '(':
+                        transitions[state][symbol] = '('
+                    elif symbol == ')':
+                        transitions[state][symbol] = ')'
+                    elif symbol == ':':
+                        transitions[state][symbol] = ':'
+                    elif symbol in digits:
+                        transitions[state][symbol] = 'int'
+                    elif symbol in alphabet:
+                        transitions[state][symbol] = 'id'
+                    else:
+                        transitions[state][symbol] = 'TRAP'
+                elif state == '+' or state == '*' or state == '(' or state == ')' or state == ':=':
+                    transitions[state][symbol] = 'TRAP'
+                elif state == ':':
+                    if symbol == '=':
+                        transitions[state][symbol] = ':='
+                    else:
+                        transitions[state][symbol] = 'TRAP'
+                elif state == 'int':
+                    if symbol in digits:
+                        transitions[state][symbol] = 'int'
+                    else:
+                        transitions[state][symbol] = 'TRAP'
+                elif state == 'id':
+                    if symbol in alphabet or symbol in digits:
+                        transitions[state][symbol] = 'id'
+                    else:
+                        transitions[state][symbol] = 'TRAP'
+                elif state == 'TRAP':
+                    transitions[state][symbol] = 'TRAP'
 
+        super().__init__(symbols, states, transitions, initial_state, final_states)
+
+
+    def try_input(self, string):
+        return self.try_string(string)
